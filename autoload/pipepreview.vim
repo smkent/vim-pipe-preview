@@ -5,6 +5,9 @@ function! pipepreview#start()
     if get(b:, 'pipe_preview_buffer', 0)
         return
     endif
+    if &filetype == 'pipe_preview_buffer'
+        return
+    endif
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
     let l:parent_line_pos = line('.')
