@@ -14,7 +14,7 @@ This plugin was developed and tested on Linux.
 
 ## Installation
 
-To install with [vim-plug](https://github.com/junegunn/vim-plug).
+To install with [vim-plug](https://github.com/junegunn/vim-plug),
 add an entry to your `~/.vimrc`:
 
 ```vim
