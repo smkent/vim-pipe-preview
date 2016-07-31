@@ -10,6 +10,8 @@ configured external command.
 
 This plugin was developed and tested on Linux.
 
+![](/img/screenshot.png)
+
 ## Installation
 
 To install with [vim-plug](https://github.com/junegunn/vim-plug).
