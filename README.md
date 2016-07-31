@@ -26,7 +26,7 @@ Restart vim (or reload your `~/.vimrc`) and run `:PlugInstall`.
 ## Dependencies
 
 If [AnsiEsc](https://github.com/vim-scripts/AnsiEsc.vim) is installed, ANSI
-color escape codes will be evaluated in the preview buffer automatically.
+color escape codes will be evaluated in the preview window automatically.
 
 ## Configuration and Usage
 
@@ -63,10 +63,6 @@ This was partially inspired by
 which creates a [`scrollbind`
 window](http://vim.wikia.com/wiki/Scrolling_synchronously) with `git blame`
 output.
-
-## Known Issues
-
-* No vim help documentation is available for this plugin yet.
 
 ## License
 
