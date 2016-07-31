@@ -56,6 +56,14 @@ The `:PipePreview` command may also be mapped for easier use. For example:
 nnoremap <silent> ,pp :<C-U>PipePreview<CR>
 ```
 
+## Inspiration
+
+This was partially inspired by
+[vim-fugitive](https://github.com/tpope/vim-fugitive); particularly `:Gblame`
+which creates a [`scrollbind`
+window](http://vim.wikia.com/wiki/Scrolling_synchronously) with `git blame`
+output.
+
 ## Known Issues
 
 * No vim help documentation is available for this plugin yet.
