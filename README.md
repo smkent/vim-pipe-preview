@@ -56,6 +56,9 @@ The `:PipePreview` command may also be mapped for easier use. For example:
 nnoremap <silent> ,pp :<C-U>PipePreview<CR>
 ```
 
+Please see [the vim-pipe-preview help file](/doc/vim-pipe-preview.txt) for full
+documentation.
+
 ## Inspiration
 
 This was partially inspired by

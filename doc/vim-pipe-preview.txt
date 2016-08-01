@@ -37,6 +37,13 @@ buffer contents on standard input.
 For example, to filter buffer contents through grep with a search term: >
     let g:pipe_preview_command = 'grep -e "search-term"'
 <
+                                            *g:pipe_preview_<filetype>_command*
+Similar to |g:pipe_preview_command|, but specific to <filetype>. For example,
+to use terminal_markdown_viewer
+(https://github.com/axiros/terminal_markdown_viewer) to preview Markdown
+files: >
+    let g:pipe_preview_markdown_command = 'mdv -'
+<
 
 ==============================================================================
 COMMANDS                                    *vim-pipe-preview-commands*

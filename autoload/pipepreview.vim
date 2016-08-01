@@ -1,5 +1,6 @@
 function! pipepreview#start()
-    if empty(get(g:, 'pipe_preview_command', ''))
+    let l:command = pipepreview#get_command()
+    if empty(l:command)
         return
     endif
     if get(b:, 'pipe_preview_buffer', 0)
@@ -25,6 +26,7 @@ function! pipepreview#start()
     let w:pipe_preview_close_restore = l:restore
     call setbufvar(l:buf_nr, 'pipe_preview_buffer', bufnr('%'))
     let b:pipe_preview_parent_buffer = l:buf_nr
+    let b:pipe_preview_command = l:command
     setlocal filetype=pipe_preview_buffer buftype=nofile bufhidden=delete
         \ noswapfile nobuflisted nonumber norelativenumber modifiable
     call pipepreview#execute_command()
@@ -39,11 +41,20 @@ function! pipepreview#start()
     syncbind
 endfunction
 
+function! pipepreview#get_command()
+    let l:ft_command = get(g:, 'pipe_preview_' . &filetype . '_command', '')
+    echom l:ft_command
+    if !empty(l:ft_command)
+        return l:ft_command
+    endif
+    return get(g:, 'pipe_preview_command', '')
+endfunction
+
 function! pipepreview#execute_command()
     execute ':%d _'
     let l:cont = getbufline(b:pipe_preview_parent_buffer, 0, '$')
     call append(line('0'), l:cont)
-    silent execute ':%!' . g:pipe_preview_command
+    silent execute ':%!' . b:pipe_preview_command
 endfunction
 
 function! pipepreview#refresh(line_top, line_pos)
@@ -75,8 +86,8 @@ function! pipepreview#update()
     let l:line_top = line('w0') + &scrolloff
     let l:line_pos = line('.')
     setlocal noscrollbind
-    execute +bufwinnr(l:pipe_preview_buf) .
-        \ 'windo! call pipepreview#refresh('
+    execute +bufwinnr(l:pipe_preview_buf)
+        \ . 'windo! call pipepreview#refresh('
         \ . l:line_top . ', ' . l:line_pos . ')'
     wincmd p
     setlocal scrollbind
