@@ -1,3 +1,13 @@
+function! pipepreview#install_autocommands()
+    augroup pipe_preview_commands
+        autocmd!
+        autocmd BufWinLeave *
+            \ execute getwinvar(+bufwinnr(+expand('<abuf>')),
+            \ 'pipe_preview_close_restore')
+    augroup END
+    let g:pipe_preview_autocommands_installed = 1
+endfunction
+
 function! pipepreview#start()
     let l:command = pipepreview#get_command()
     if empty(l:command)
@@ -8,6 +18,9 @@ function! pipepreview#start()
     endif
     if &filetype == 'pipe_preview_buffer'
         return
+    endif
+    if empty(get(g:, 'pipe_preview_autocommands_installed'))
+        call pipepreview#install_autocommands()
     endif
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
