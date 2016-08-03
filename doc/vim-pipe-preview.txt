@@ -31,12 +31,16 @@ color escape codes will be evaluated in the preview window automatically.
 CONFIGURATION                               *vim-pipe-preview-configuration*
 
                                             *g:pipe_preview_command*
+                                            *b:pipe_preview_command*
 External command to pass buffer contents to. The specified command must accept
 buffer contents on standard input.
 
 For example, to filter buffer contents through grep with a search term: >
     let g:pipe_preview_command = 'grep -e "search-term"'
 <
+|b:pipe_preview_command| overrides |g:pipe_preview_command|, if defined. See
+|internal-variables| for variable scope information.
+
                                             *g:pipe_preview_<filetype>_command*
 Similar to |g:pipe_preview_command|, but specific to <filetype>. For example,
 to use terminal_markdown_viewer

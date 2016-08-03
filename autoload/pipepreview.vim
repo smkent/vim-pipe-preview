@@ -55,6 +55,10 @@ function! pipepreview#start()
 endfunction
 
 function! pipepreview#get_command()
+    let l:buffer_local_command = get(b:, 'pipe_preview_command', '')
+    if !empty(l:buffer_local_command)
+        return l:buffer_local_command
+    endif
     let l:ft_command = get(g:, 'pipe_preview_' . &filetype . '_command', '')
     if !empty(l:ft_command)
         return l:ft_command
