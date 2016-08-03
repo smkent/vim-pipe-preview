@@ -13,11 +13,14 @@ function! pipepreview#start()
     if empty(l:command)
         return
     endif
-    if get(b:, 'pipe_preview_buffer', 0)
-        return
-    endif
     if &filetype == 'pipe_preview_buffer'
         return
+    endif
+    let l:pipe_preview_buffer = get(b:, 'pipe_preview_buffer', 0)
+    if !empty(l:pipe_preview_buffer)
+        if +bufwinnr(l:pipe_preview_buffer) != -1
+            return
+        endif
     endif
     if empty(get(g:, 'pipe_preview_autocommands_installed'))
         call pipepreview#install_autocommands()
