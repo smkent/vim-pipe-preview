@@ -1,6 +1,7 @@
 function! pipepreview#install_autocommands()
     augroup pipe_preview_commands
         autocmd!
+        autocmd WinEnter * call pipepreview#winenter()
         autocmd BufWinLeave *
             \ execute getwinvar(+bufwinnr(+expand('<abuf>')),
             \ 'pipe_preview_close_restore')
@@ -113,4 +114,50 @@ function! pipepreview#update()
     if exists(':AirlineRefresh')
         AirlineRefresh
     endif
+endfunction
+
+function! pipepreview#get_matching_buffer()
+    let l:preview_buffer = get(b:, 'pipe_preview_buffer', 0)
+    if !empty(l:preview_buffer)
+        return l:preview_buffer
+    endif
+    let l:parent_buffer = get(b:, 'pipe_preview_parent_buffer', 0)
+    if !empty(l:parent_buffer)
+        return l:parent_buffer
+    endif
+    return 0
+endfunction
+
+function! pipepreview#has_or_is_preview_buffer()
+    return !empty(pipepreview#get_matching_buffer())
+endfunction
+
+function! pipepreview#winenter()
+    let l:matching_buffer = pipepreview#get_matching_buffer()
+    let l:pipe_preview_parent_buffer = get(b:, 'pipe_preview_parent_buffer', 0)
+    let l:max_winnr = winnr('$')
+    if !empty(l:pipe_preview_parent_buffer)
+        if +bufwinnr(l:pipe_preview_parent_buffer) == -1
+            " Parent window is closed, close the preview window
+            q
+        endif
+    endif
+    if l:max_winnr <= 1
+        return
+    endif
+    if empty(l:matching_buffer)
+        return
+    endif
+    let l:return_winnr = winnr()
+    for win_nr in range(1, winnr('$'))
+        execute win_nr . 'wincmd w'
+        if pipepreview#has_or_is_preview_buffer()
+            set noscrollbind
+        endif
+    endfor
+    if !empty(l:matching_buffer)
+        execute +bufwinnr(l:matching_buffer) . 'windo! setlocal scrollbind'
+    endif
+    execute l:return_winnr . 'wincmd w'
+    setlocal scrollbind
 endfunction
