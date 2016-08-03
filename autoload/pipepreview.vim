@@ -4,6 +4,7 @@ function! pipepreview#install_autocommands()
         autocmd BufWinLeave *
             \ execute getwinvar(+bufwinnr(+expand('<abuf>')),
             \ 'pipe_preview_close_restore')
+        autocmd BufWritePost * silent call pipepreview#update()
     augroup END
     let g:pipe_preview_autocommands_installed = 1
 endfunction
@@ -28,11 +29,6 @@ function! pipepreview#start()
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
     let l:parent_line_pos = line('.')
-
-    augroup pipe_preview_parent_buffer_commands
-        autocmd!
-        autocmd BufWritePost <buffer> silent call pipepreview#update()
-    augroup END
 
     keepalt rightbelow vnew
     wincmd l
