@@ -10,6 +10,6 @@ let g:loaded_vim_pipe_preview = 1
 let g:pipe_preview_command = get(g:, 'pipe_preview_command', 0)
 let g:pipe_preview_update_on_save = get(g:, 'pipe_preview_update_on_save', 1)
 
-command! PipePreview :call pipepreview#start(0)
-command! PipePreviewHorizontal :call pipepreview#start(1)
-command! PipePreviewUpdate :call pipepreview#update()
+command! PipePreview :call pipepreview#start_preview(0)
+command! PipePreviewHorizontal :call pipepreview#start_preview(1)
+command! PipePreviewUpdate :call pipepreview#update_preview()

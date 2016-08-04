@@ -13,8 +13,8 @@ function! pipepreview#install_autocommands()
     let g:pipe_preview_autocommands_installed = 1
 endfunction
 
-function! pipepreview#start(horizontal_split)
-    let l:command = pipepreview#get_command()
+function! pipepreview#start_preview(horizontal_split)
+    let l:command = pipepreview#get_preview_command()
     if empty(l:command)
         return
     endif
@@ -33,17 +33,15 @@ function! pipepreview#start(horizontal_split)
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
     let l:parent_line_pos = line('.')
-
     if a:horizontal_split
         keepalt rightbelow new
     else
         keepalt rightbelow vnew
     endif
     wincmd l
-    let l:restore =
+    let w:pipe_preview_close_restore =
         \ 'call setwinvar(bufwinnr(' . l:buf_nr . '), ' . '"&scrollbind", 0)' .
         \ '| call setbufvar(' . l:buf_nr . ', "pipe_preview_buffer", 0)'
-    let w:pipe_preview_close_restore = l:restore
     call setbufvar(l:buf_nr, 'pipe_preview_buffer', bufnr('%'))
     let b:pipe_preview_parent_buffer = l:buf_nr
     let b:pipe_preview_command = l:command
@@ -53,15 +51,14 @@ function! pipepreview#start(horizontal_split)
     if exists(':AnsiEsc')
         AnsiEsc
     endif
-
     execute l:parent_line_pos
     setlocal nomodified nomodifiable scrollbind
     execute +bufwinnr(b:pipe_preview_parent_buffer) .
         \ 'windo! setlocal scrollbind'
     syncbind
 
-    let l:restore = 'let w:pipe_preview_buffer = ' . b:pipe_preview_buffer
-    let w:pipe_preview_close_restore = l:restore
+    let w:pipe_preview_close_restore =
+        \ 'let w:pipe_preview_buffer = ' . b:pipe_preview_buffer
 endfunction
 
 function! pipepreview#check_command_exists(command)
@@ -70,7 +67,7 @@ function! pipepreview#check_command_exists(command)
     endif
 endfunction
 
-function! pipepreview#get_command()
+function! pipepreview#get_preview_command()
     let l:buffer_local_command = get(b:, 'pipe_preview_command', '')
     if !empty(l:buffer_local_command)
         return pipepreview#check_command_exists(l:buffer_local_command)
@@ -89,14 +86,13 @@ function! pipepreview#execute_command()
     silent execute ':%!' . b:pipe_preview_command
 endfunction
 
-function! pipepreview#refresh(line_top, line_pos)
+function! pipepreview#update_preview_command_wrapper(line_top, line_pos)
     setlocal modifiable
     if !exists('b:pipe_preview_parent_buffer')
         return
     endif
     let l:prev_line_top = line('w0')
     let l:prev_line = line('.')
-
     setlocal noscrollbind
     if exists(':AnsiEsc')
         AnsiEsc
@@ -110,7 +106,7 @@ function! pipepreview#refresh(line_top, line_pos)
     setlocal nomodified nomodifiable
 endfunction
 
-function! pipepreview#update()
+function! pipepreview#update_preview()
     let l:pipe_preview_buf = get(b:, 'pipe_preview_buffer')
     if !l:pipe_preview_buf
         return
@@ -119,7 +115,7 @@ function! pipepreview#update()
     let l:line_pos = line('.')
     setlocal noscrollbind
     execute +bufwinnr(l:pipe_preview_buf)
-        \ . 'windo! call pipepreview#refresh('
+        \ . 'windo! call pipepreview#update_preview_command_wrapper('
         \ . l:line_top . ', ' . l:line_pos . ')'
     wincmd p
     setlocal scrollbind
@@ -132,6 +128,7 @@ function! pipepreview#update()
     endif
 endfunction
 
+" Get the preview buffer from a parent buffer or vice versa
 function! pipepreview#get_matching_buffer()
     let l:preview_buffer = get(b:, 'pipe_preview_buffer', 0)
     if !empty(l:preview_buffer)
@@ -142,10 +139,6 @@ function! pipepreview#get_matching_buffer()
         return l:parent_buffer
     endif
     return 0
-endfunction
-
-function! pipepreview#has_or_is_preview_buffer()
-    return !empty(pipepreview#get_matching_buffer())
 endfunction
 
 function! pipepreview#winenter()
@@ -167,7 +160,7 @@ function! pipepreview#winenter()
     let l:return_winnr = winnr()
     for win_nr in range(1, winnr('$'))
         execute win_nr . 'wincmd w'
-        if pipepreview#has_or_is_preview_buffer()
+        if !empty(l:matching_buffer)
             set noscrollbind
         endif
     endfor
@@ -188,7 +181,7 @@ function! pipepreview#reuse_or_close_preview()
     if l:existing_preview_win_nr == -1
         return
     endif
-    let l:command = pipepreview#get_command()
+    let l:command = pipepreview#get_preview_command()
     if empty(l:command)
         " Close existing preview window
         let l:restore_win_nr = winnr()
@@ -201,6 +194,6 @@ function! pipepreview#reuse_or_close_preview()
         \ bufnr('%'))
     call setbufvar(l:existing_preview_buffer, "pipe_preview_command", l:command)
     let b:pipe_preview_buffer = l:existing_preview_buffer
-    call pipepreview#update()
+    call pipepreview#update_preview()
     syncbind
 endfunction
