@@ -6,7 +6,9 @@ function! pipepreview#install_autocommands()
         autocmd BufWinLeave *
             \ execute getwinvar(+bufwinnr(+expand('<abuf>')),
             \ 'pipe_preview_close_restore')
-        autocmd BufWritePost * :PipePreviewUpdate
+        if !empty(g:pipe_preview_update_on_save)
+            autocmd BufWritePost * :PipePreviewUpdate
+        endif
     augroup END
     let g:pipe_preview_autocommands_installed = 1
 endfunction

@@ -21,9 +21,9 @@ piped through the configured external command, and the output is displayed in
 the new window split. The buffer and its preview have 'scrollbind' set in
 order to scroll together.
 
-The preview window is updated automatically each time the parent buffer is
-saved, until the preview window is closed. The preview window can also be
-updated on demand (see |:PipePreviewUpdate|).
+The preview window is updated automatically each time the corresponding parent
+buffer is saved, until the preview window is closed. The preview window can
+also be updated on demand (see |:PipePreviewUpdate|).
 
 If AnsiEsc (https://github.com/vim-scripts/AnsiEsc.vim) is installed, ANSI
 color escape codes will be evaluated in the preview window automatically.
@@ -50,6 +50,10 @@ to use terminal_markdown_viewer
 files: >
     let g:pipe_preview_markdown_command = 'mdv -'
 <
+                                            *g:pipe_preview_update_on_save*
+If set, update preview windows when the corresponding parent buffer is saved.
+(Default: enabled)
+
 
 ==============================================================================
 COMMANDS                                    *vim-pipe-preview-commands*
