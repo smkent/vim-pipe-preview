@@ -22,7 +22,8 @@ the new window split. The buffer and its preview have 'scrollbind' set in
 order to scroll together.
 
 The preview window is updated automatically each time the parent buffer is
-saved, until the preview window is closed.
+saved, until the preview window is closed. The preview window can also be
+updated on demand (see |:PipePreviewUpdate|).
 
 If AnsiEsc (https://github.com/vim-scripts/AnsiEsc.vim) is installed, ANSI
 color escape codes will be evaluated in the preview window automatically.
@@ -55,6 +56,9 @@ COMMANDS                                    *vim-pipe-preview-commands*
 
                                             *:PipePreview*
 Start preview for the current buffer.
+
+                                            *:PipePreviewUpdate*
+Update the preview for the current buffer.
 
 
  vim:tw=78:et:ft=help:norl:

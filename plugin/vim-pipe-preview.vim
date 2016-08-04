@@ -10,3 +10,4 @@ let g:loaded_vim_pipe_preview = 1
 let g:pipe_preview_command = get(g:, 'pipe_preview_command', 0)
 
 command! PipePreview :call pipepreview#start()
+command! PipePreviewUpdate :call pipepreview#update()
