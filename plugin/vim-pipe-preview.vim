@@ -1,5 +1,6 @@
 " vim-pipe-preview provides a way to pipe a buffer through an external command
-" and display the output in a separate split
+" and display the output in a separate split, which scrolls together with the
+" source buffer.
 
 if exists('g:loaded_vim_pipe_preview')
     finish

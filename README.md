@@ -1,12 +1,14 @@
 # vim-pipe-preview
 
 vim-pipe-preview provides a way to pipe a buffer through an external command
-and display the output in a separate split.
+and display the output in a separate split, which scrolls together with the
+source buffer.
 
-I wrote this plugin in order to preview Markdown files using
+This plugin can pipe buffer contents through any command that reads from
+standard input and returns results on standard output. My original motivation
+for writing this plugin was to preview Markdown files using
 [terminal_markdown_viewer](https://github.com/axiros/terminal_markdown_viewer)
-within vim, but this plugin can pipe buffer contents through an arbitrary
-configured external command.
+within vim.
 
 This plugin was developed and tested on Linux.
 

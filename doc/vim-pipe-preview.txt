@@ -9,7 +9,8 @@ License: GPLv3 (See LICENSE and COPYING in the plugin repository)
 INTRODUCTION                                *vim-pipe-preview-introduction*
 
 vim-pipe-preview provides a way to pipe a buffer through an external command
-and display the output in a separate split.
+and display the output in a separate split, which scrolls together with the
+source buffer.
 
 A command must be specified before this plugin can be used. See
 |vim-pipe-preview-configuration|.
