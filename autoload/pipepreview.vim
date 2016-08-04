@@ -30,7 +30,6 @@ function! pipepreview#start()
     endif
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
-    let l:file_type = &filetype
     let l:parent_line_pos = line('.')
 
     keepalt rightbelow vnew
@@ -42,7 +41,6 @@ function! pipepreview#start()
     call setbufvar(l:buf_nr, 'pipe_preview_buffer', bufnr('%'))
     let b:pipe_preview_parent_buffer = l:buf_nr
     let b:pipe_preview_command = l:command
-    let b:pipe_preview_file_type = l:file_type
     setlocal filetype=pipe_preview_buffer buftype=nofile bufhidden=delete
         \ noswapfile nobuflisted nonumber norelativenumber modifiable
     call pipepreview#execute_command()
@@ -178,9 +176,8 @@ function! pipepreview#reuse_or_close_preview()
     if l:existing_preview_win_nr == -1
         return
     endif
-    let l:preview_file_type =
-        \ getbufvar(l:existing_preview_buffer, 'pipe_preview_file_type', '')
-    if empty(l:preview_file_type) || l:preview_file_type != &filetype
+    let l:command = pipepreview#get_command()
+    if empty(l:command)
         " Close existing preview window
         let l:restore_win_nr = winnr()
         execute l:existing_preview_win_nr . 'windo! q'
@@ -190,6 +187,8 @@ function! pipepreview#reuse_or_close_preview()
     " Reuse existing preview window
     call setbufvar(l:existing_preview_buffer, "pipe_preview_parent_buffer",
         \ bufnr('%'))
+    call setbufvar(l:existing_preview_buffer, "pipe_preview_command", l:command)
     let b:pipe_preview_buffer = l:existing_preview_buffer
     call pipepreview#update()
+    syncbind
 endfunction
