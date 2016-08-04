@@ -64,16 +64,22 @@ function! pipepreview#start(horizontal_split)
     let w:pipe_preview_close_restore = l:restore
 endfunction
 
+function! pipepreview#check_command_exists(command)
+    if executable(split(a:command)[0])
+        return a:command
+    endif
+endfunction
+
 function! pipepreview#get_command()
     let l:buffer_local_command = get(b:, 'pipe_preview_command', '')
     if !empty(l:buffer_local_command)
-        return l:buffer_local_command
+        return pipepreview#check_command_exists(l:buffer_local_command)
     endif
     let l:ft_command = get(g:, 'pipe_preview_' . &filetype . '_command', '')
     if !empty(l:ft_command)
-        return l:ft_command
+        return pipepreview#check_command_exists(l:ft_command)
     endif
-    return get(g:, 'pipe_preview_command', '')
+    return pipepreview#check_command_exists(get(g:, 'pipe_preview_command', ''))
 endfunction
 
 function! pipepreview#execute_command()
