@@ -2,6 +2,7 @@ function! pipepreview#install_autocommands()
     augroup pipe_preview_commands
         autocmd!
         autocmd WinEnter * call pipepreview#winenter()
+        autocmd BufWinEnter * call pipepreview#reuse_or_close_preview()
         autocmd BufWinLeave *
             \ execute getwinvar(+bufwinnr(+expand('<abuf>')),
             \ 'pipe_preview_close_restore')
@@ -29,6 +30,7 @@ function! pipepreview#start()
     endif
     let l:buf_name = bufname('%')
     let l:buf_nr = bufnr('%')
+    let l:file_type = &filetype
     let l:parent_line_pos = line('.')
 
     keepalt rightbelow vnew
@@ -40,6 +42,7 @@ function! pipepreview#start()
     call setbufvar(l:buf_nr, 'pipe_preview_buffer', bufnr('%'))
     let b:pipe_preview_parent_buffer = l:buf_nr
     let b:pipe_preview_command = l:command
+    let b:pipe_preview_file_type = l:file_type
     setlocal filetype=pipe_preview_buffer buftype=nofile bufhidden=delete
         \ noswapfile nobuflisted nonumber norelativenumber modifiable
     call pipepreview#execute_command()
@@ -52,6 +55,9 @@ function! pipepreview#start()
     execute +bufwinnr(b:pipe_preview_parent_buffer) .
         \ 'windo! setlocal scrollbind'
     syncbind
+
+    let l:restore = 'let w:pipe_preview_buffer = ' . b:pipe_preview_buffer
+    let w:pipe_preview_close_restore = l:restore
 endfunction
 
 function! pipepreview#get_command()
@@ -160,4 +166,30 @@ function! pipepreview#winenter()
     endif
     execute l:return_winnr . 'wincmd w'
     setlocal scrollbind
+endfunction
+
+function! pipepreview#reuse_or_close_preview()
+    let l:existing_preview_buffer = get(w:, 'pipe_preview_buffer', 0)
+    if empty(l:existing_preview_buffer)
+        return
+    endif
+    unlet w:pipe_preview_buffer
+    let l:existing_preview_win_nr = +bufwinnr(l:existing_preview_buffer)
+    if l:existing_preview_win_nr == -1
+        return
+    endif
+    let l:preview_file_type =
+        \ getbufvar(l:existing_preview_buffer, 'pipe_preview_file_type', '')
+    if empty(l:preview_file_type) || l:preview_file_type != &filetype
+        " Close existing preview window
+        let l:restore_win_nr = winnr()
+        execute l:existing_preview_win_nr . 'windo! q'
+        execute l:restore_win_nr . 'wincmd w'
+        return
+    endif
+    " Reuse existing preview window
+    call setbufvar(l:existing_preview_buffer, "pipe_preview_parent_buffer",
+        \ bufnr('%'))
+    let b:pipe_preview_buffer = l:existing_preview_buffer
+    call pipepreview#update()
 endfunction
