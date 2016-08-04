@@ -15,11 +15,11 @@ source buffer.
 A command must be specified before this plugin can be used. See
 |vim-pipe-preview-configuration|.
 
-When activated (see |vim-pipe-preview-commands|), a new vertical split is
-opened to the right of the current buffer. The current buffer contents are
-piped through the configured external command, and the output is displayed in
-the new window split. The buffer and its preview have 'scrollbind' set in
-order to scroll together.
+When activated (see |vim-pipe-preview-commands|), a new split is opened next
+to the current buffer. The current buffer contents are piped through the
+configured external command, and the output is displayed in the new window
+split. The buffer and its preview have 'scrollbind' set in order to scroll
+together.
 
 The preview window is updated automatically each time the corresponding parent
 buffer is saved, until the preview window is closed. The preview window can
@@ -59,7 +59,12 @@ If set, update preview windows when the corresponding parent buffer is saved.
 COMMANDS                                    *vim-pipe-preview-commands*
 
                                             *:PipePreview*
-Start preview for the current buffer.
+Start preview for the current buffer in a vertical split (windows arranged
+horizontally).
+
+                                            *:PipePreviewHorizontal*
+Start preview for the current buffer in a horizontal split (windows arranged
+vertically).
 
                                             *:PipePreviewUpdate*
 Update the preview for the current buffer.

@@ -13,7 +13,7 @@ function! pipepreview#install_autocommands()
     let g:pipe_preview_autocommands_installed = 1
 endfunction
 
-function! pipepreview#start()
+function! pipepreview#start(horizontal_split)
     let l:command = pipepreview#get_command()
     if empty(l:command)
         return
@@ -34,7 +34,11 @@ function! pipepreview#start()
     let l:buf_nr = bufnr('%')
     let l:parent_line_pos = line('.')
 
-    keepalt rightbelow vnew
+    if a:horizontal_split
+        keepalt rightbelow new
+    else
+        keepalt rightbelow vnew
+    endif
     wincmd l
     let l:restore =
         \ 'call setwinvar(bufwinnr(' . l:buf_nr . '), ' . '"&scrollbind", 0)' .
