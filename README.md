@@ -20,7 +20,7 @@ To install with [vim-plug](https://github.com/junegunn/vim-plug),
 add an entry to your `~/.vimrc`:
 
 ```vim
-Plug('smkent/vim-pipe-preview')
+Plug 'smkent/vim-pipe-preview'
 ```
 
 Restart vim (or reload your `~/.vimrc`) and run `:PlugInstall`.
