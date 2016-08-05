@@ -54,7 +54,7 @@ function! pipepreview#start_preview(horizontal_split)
     execute l:parent_line_pos
     setlocal nomodified nomodifiable scrollbind
     execute +bufwinnr(b:pipe_preview_parent_buffer) .
-        \ 'windo! setlocal scrollbind'
+        \ 'wincmd w | setlocal scrollbind'
     syncbind
 
     let w:pipe_preview_close_restore =
@@ -115,7 +115,7 @@ function! pipepreview#update_preview()
     let l:line_pos = line('.')
     setlocal noscrollbind
     execute +bufwinnr(l:pipe_preview_buf)
-        \ . 'windo! call pipepreview#update_preview_command_wrapper('
+        \ . 'wincmd w | call pipepreview#update_preview_command_wrapper('
         \ . l:line_top . ', ' . l:line_pos . ')'
     wincmd p
     setlocal scrollbind
@@ -165,7 +165,7 @@ function! pipepreview#winenter()
         endif
     endfor
     if !empty(l:matching_buffer)
-        execute +bufwinnr(l:matching_buffer) . 'windo! setlocal scrollbind'
+        execute +bufwinnr(l:matching_buffer) . 'wincmd w | setlocal scrollbind'
     endif
     execute l:return_winnr . 'wincmd w'
     setlocal scrollbind
@@ -185,7 +185,7 @@ function! pipepreview#reuse_or_close_preview()
     if empty(l:command)
         " Close existing preview window
         let l:restore_win_nr = winnr()
-        execute l:existing_preview_win_nr . 'windo! q'
+        execute l:existing_preview_win_nr . 'wincmd w | q'
         execute l:restore_win_nr . 'wincmd w'
         return
     endif
